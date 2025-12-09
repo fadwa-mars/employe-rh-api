@@ -8,9 +8,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Chemins vers les fichiers JSON
 const employeesPath = path.join(__dirname, "..", "data", "employees.json");
 const departmentsPath = path.join(__dirname, "..", "data", "departments.json");
 
+// Charger les données
 let employees = JSON.parse(fs.readFileSync(employeesPath, "utf8"));
 let departments = JSON.parse(fs.readFileSync(departmentsPath, "utf8"));
 
@@ -77,4 +79,5 @@ app.get("/departments/:id", (req, res) => {
   res.json(dept);
 });
 
+// ✅ Exporter l’app pour Vercel
 module.exports = app;
