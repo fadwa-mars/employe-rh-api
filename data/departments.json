@@ -1,0 +1,8 @@
+[
+  { "id": "IT", "name": "Informatique" },
+  { "id": "Commercial", "name": "Commercial" },
+  { "id": "RH", "name": "Ressources Humaines" },
+  { "id": "Finance", "name": "Finance" },
+  { "id": "Marketing", "name": "Marketing" },
+  { "id": "Production", "name": "Production" }
+]

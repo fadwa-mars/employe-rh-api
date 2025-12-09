@@ -1,0 +1,17 @@
+{
+  "name": "students-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node local-server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.22.1"
+  },
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "type": "commonjs"
+}
