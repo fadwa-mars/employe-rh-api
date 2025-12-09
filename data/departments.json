@@ -1,8 +1,8 @@
 [
-  { "id": "IT", "name": "Informatique" },
-  { "id": "Commercial", "name": "Commercial" },
-  { "id": "RH", "name": "Ressources Humaines" },
-  { "id": "Finance", "name": "Finance" },
-  { "id": "Marketing", "name": "Marketing" },
-  { "id": "Production", "name": "Production" }
+  { "id": "D01", "nom": "IT" },
+  { "id": "D02", "nom": "Commercial" },
+  { "id": "D03", "nom": "RH" },
+  { "id": "D04", "nom": "Finance" },
+  { "id": "D05", "nom": "Marketing" },
+  { "id": "D06", "nom": "Production" }
 ]
