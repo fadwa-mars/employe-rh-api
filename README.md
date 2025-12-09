@@ -10,15 +10,15 @@ Elle supporte un CRUD complet : **Ajouter, Afficher, Mettre à jour, Supprimer**
 ---
 
 ## 📂 Structure des Fichiers
-employe-rh-api/
-│
-├─ api/
-│ └─ index.js # Code Express avec routes CRUD
-├─ data/
-│ ├─ employees.json # Liste des employés
-│ └─ departments.json # Liste des départements
-├─ package.json # Configuration du projet
-└─ vercel.json # Configuration pour Vercel
+employe-rh-api/ <br>
+│ <br>
+├─ api/ <br>
+│ └─ index.js # Code Express avec routes CRUD <br>
+├─ data/ <br>
+│ ├─ employees.json # Liste des employés <br>
+│ └─ departments.json # Liste des départements <br>
+├─ package.json # Configuration du projet <br>
+└─ vercel.json # Configuration pour Vercel <br>
 ---
 
 ## 🔗 Endpoints 
@@ -52,8 +52,6 @@ employe-rh-api/
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 ---
-✍️ Auteur
-
-Fadwa Mars
-Développeuse Full-Stack | Passionnée par la gestion et le développement d’API
+## ✍️ Auteur
+Fadwa Mars - Développeuse Full-Stack | Passionnée par la gestion et le développement d’API
 ---
