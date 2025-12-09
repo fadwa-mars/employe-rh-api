@@ -1,27 +1,18 @@
 # 🚀 EmployeRhManagement API
 
-[![Node.js](https://img.shields.io/badge/Node.js-v20-green)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express.js-4.x-yellow)](https://expressjs.com/)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-blue)](https://vercel.com/)
+<p align="center">
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-v20-green?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"></a>
+  <a href="https://expressjs.com/"><img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"></a>
+  <a href="https://vercel.com/"><img src="https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel"></a>
+  <a href="https://www.json.org/json-en.html"><img src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white" alt="JSON"></a>
+</p>
 
 Une API REST construite avec **Express.js** et déployée sur **Vercel**, permettant de gérer les employés et départements d’une entreprise **InnovateTech**.  
-Elle supporte un CRUD complet : **Ajouter, Afficher, Mettre à jour, Supprimer**.
+Elle offre un CRUD complet : **Ajouter, Afficher, Mettre à jour, Supprimer**.
 
 ---
 
-## 📂 Structure des Fichiers
-employe-rh-api/ <br>
-│ <br>
-├─ api/ <br>
-│ └─ index.js # Code Express avec routes CRUD <br>
-├─ data/ <br>
-│ ├─ employees.json # Liste des employés <br>
-│ └─ departments.json # Liste des départements <br>
-├─ package.json # Configuration du projet <br>
-└─ vercel.json # Configuration pour Vercel <br>
----
-
-## 🔗 Endpoints 
+## 🔗 Endpoints
 
 ### 👥 Employés
 
@@ -44,14 +35,9 @@ employe-rh-api/ <br>
 | DELETE  | `/departments/:id`  | Supprimer un département       |
 
 ---
-## 🛠 Technologies Utilisées
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)  
-[![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)  
-[![JSON](https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white)](https://www.json.org/json-en.html)  
-[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
-
----
 ## ✍️ Auteur
-Fadwa Mars - Développeuse Full-Stack | Passionnée par la gestion et le développement d’API
----
+
+**Fadwa Mars**  
+Développeuse Full-Stack | Passionnée par la gestion et le développement d’API  
+[GitHub](https://github.com/fadwa-mars) | [LinkedIn](https://www.linkedin.com/in/marsfadwa)
