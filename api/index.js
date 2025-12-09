@@ -2,57 +2,79 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-const { v4: uuidv4 } = require("uuid"); // pour générer matricule automatiquement
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Charger les données
 const employeesPath = path.join(__dirname, "..", "data", "employees.json");
 const departmentsPath = path.join(__dirname, "..", "data", "departments.json");
 
 let employees = JSON.parse(fs.readFileSync(employeesPath, "utf8"));
 let departments = JSON.parse(fs.readFileSync(departmentsPath, "utf8"));
 
-// Route racine
-app.get("/", (req, res) => {
-  res.send("Employees API — RH Management 🚀");
-});
-
-// Tous les employés
+// 🔍 GET all employees
 app.get("/employees", (req, res) => {
   res.json(employees);
 });
 
-// Détail d’un employé par matricule
+// 🔍 GET employee by matricule
 app.get("/employees/:matricule", (req, res) => {
-  const { matricule } = req.params;
-  const employee = employees.find(e => e.matricule === matricule);
+  const employee = employees.find(e => e.matricule === req.params.matricule);
   if (!employee) return res.status(404).json({ error: "Employé non trouvé" });
   res.json(employee);
 });
 
-// Ajouter un employé (matricule généré automatiquement)
+// ➕ POST new employee
 app.post("/employees", (req, res) => {
-  const newEmployee = { matricule: uuidv4(), ...req.body };
+  const { nom, prenom, poste, departement, salaire, dateEmbauche, email, telephone } = req.body;
+  const newEmployee = {
+    matricule: uuidv4(),
+    nom,
+    prenom,
+    poste,
+    departement,
+    salaire,
+    dateEmbauche,
+    email,
+    telephone
+  };
   employees.push(newEmployee);
   fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
   res.status(201).json(newEmployee);
 });
 
-// Tous les départements
+// ✏️ PUT update employee
+app.put("/employees/:matricule", (req, res) => {
+  const index = employees.findIndex(e => e.matricule === req.params.matricule);
+  if (index === -1) return res.status(404).json({ error: "Employé non trouvé" });
+
+  employees[index] = { ...employees[index], ...req.body };
+  fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
+  res.json(employees[index]);
+});
+
+// ❌ DELETE employee
+app.delete("/employees/:matricule", (req, res) => {
+  const index = employees.findIndex(e => e.matricule === req.params.matricule);
+  if (index === -1) return res.status(404).json({ error: "Employé non trouvé" });
+
+  const deleted = employees.splice(index, 1);
+  fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
+  res.json(deleted[0]);
+});
+
+// 📁 GET all departments
 app.get("/departments", (req, res) => {
   res.json(departments);
 });
 
-// Détail d’un département par id
+// 📁 GET department by ID
 app.get("/departments/:id", (req, res) => {
-  const { id } = req.params;
-  const dept = departments.find(d => d.id === id);
+  const dept = departments.find(d => d.id === req.params.id);
   if (!dept) return res.status(404).json({ error: "Département non trouvé" });
   res.json(dept);
 });
 
-// Exporter pour Vercel
 module.exports = app;
