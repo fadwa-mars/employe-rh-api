@@ -1,13 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
 // Charger les données
-const employees = require("../data/employees.json");
-const departments = require("../data/departments.json");
+const employees = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "employees.json"), "utf8"));
+const departments = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "departments.json"), "utf8"));
 
 // Route racine
 app.get("/", (req, res) => {
@@ -40,8 +43,5 @@ app.get("/departments/:id", (req, res) => {
   res.json(dept);
 });
 
-// Lancer le serveur localement
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Exporter pour Vercel (pas de app.listen ici)
+module.exports = app;
