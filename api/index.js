@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 app.use(express.json());
@@ -12,7 +11,7 @@ app.use(cors());
 const employeesPath = path.join(__dirname, "..", "data", "employees.json");
 const departmentsPath = path.join(__dirname, "..", "data", "departments.json");
 
-// Charger les données (lecture seule depuis fichiers)
+// Charger les données
 let employees = [];
 let departments = [];
 
@@ -31,6 +30,19 @@ try {
 // Helper: détection Vercel (serverless -> pas d’écriture disque)
 const isServerless = !!process.env.VERCEL;
 
+// 🔹 Générateur de matricule incrémenté
+function generateMatricule() {
+  const nums = employees
+    .map(e => {
+      const match = e.matricule?.match(/^EMP(\d+)$/);
+      return match ? parseInt(match[1], 10) : null;
+    })
+    .filter(n => n !== null);
+
+  const next = (nums.length ? Math.max(...nums) : 0) + 1;
+  return `EMP${String(next).padStart(3, "0")}`;
+}
+
 // Racine
 app.get("/", (req, res) => {
   res.send("Employees API — RH Management 🚀");
@@ -48,7 +60,7 @@ app.get("/employees/:matricule", (req, res) => {
   res.json(employee);
 });
 
-// POST new employee (matricule auto) — en mémoire sur Vercel
+// POST new employee (matricule auto)
 app.post("/employees", (req, res) => {
   const { nom, prenom, poste, departement, salaire, dateEmbauche, email, telephone } = req.body;
 
@@ -62,7 +74,7 @@ app.post("/employees", (req, res) => {
   if (missing.length) return res.status(400).json({ error: "Champs requis manquants", fields: missing });
 
   const newEmployee = {
-    matricule: uuidv4(),
+    matricule: generateMatricule(), // ✅ auto incrémenté
     nom,
     prenom,
     poste,
@@ -75,35 +87,38 @@ app.post("/employees", (req, res) => {
 
   employees.push(newEmployee);
 
-  // Écriture disque seulement en local (pas sur Vercel)
   if (!isServerless) {
     try {
       fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
     } catch (e) {
-      // En cas d’erreur locale, on renvoie quand même l’objet créé
+      console.error("Erreur écriture fichier:", e);
     }
   }
 
   res.status(201).json(newEmployee);
 });
 
-// PUT update employee — en mémoire sur Vercel
+// PUT update employee
 app.put("/employees/:matricule", (req, res) => {
   const index = employees.findIndex(e => e.matricule === req.params.matricule);
   if (index === -1) return res.status(404).json({ error: "Employé non trouvé" });
 
-  employees[index] = { ...employees[index], ...req.body };
+  // 🔹 Empêcher modification du matricule
+  const { matricule, ...updates } = req.body;
+  employees[index] = { ...employees[index], ...updates };
 
   if (!isServerless) {
     try {
       fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
-    } catch (e) {}
+    } catch (e) {
+      console.error("Erreur écriture fichier:", e);
+    }
   }
 
   res.json(employees[index]);
 });
 
-// DELETE employee — en mémoire sur Vercel
+// DELETE employee
 app.delete("/employees/:matricule", (req, res) => {
   const index = employees.findIndex(e => e.matricule === req.params.matricule);
   if (index === -1) return res.status(404).json({ error: "Employé non trouvé" });
@@ -113,7 +128,9 @@ app.delete("/employees/:matricule", (req, res) => {
   if (!isServerless) {
     try {
       fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
-    } catch (e) {}
+    } catch (e) {
+      console.error("Erreur écriture fichier:", e);
+    }
   }
 
   res.json(deleted[0]);
@@ -135,7 +152,9 @@ app.get("/departments/:id", (req, res) => {
 app.get("/_info", (req, res) => {
   res.json({
     serverless: isServerless,
-    persistence: isServerless ? "In-memory only on Vercel. Use a database for real persistence." : "JSON file writes enabled locally."
+    persistence: isServerless
+      ? "In-memory only on Vercel. Use a database for real persistence."
+      : "JSON file writes enabled locally."
   });
 });
 
