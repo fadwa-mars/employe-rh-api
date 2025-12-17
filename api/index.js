@@ -62,18 +62,26 @@ app.get("/employees/:matricule", (req, res) => {
 
 // POST new employee (matricule auto)
 app.post("/employees", (req, res) => {
-  const { nom, prenom, poste, departement, salaire, dateEmbauche, email, telephone } = req.body;
+  const { nom, prenom, poste, departement, salaire, date_embauche, email, telephone } = req.body;
+
+  // Validation basique
+  const missing = [];
+  if (!nom) missing.push("nom");
+  if (!prenom) missing.push("prenom");
+  if (!poste) missing.push("poste");
+  if (!departement) missing.push("departement");
+  if (!email) missing.push("email");
+  if (missing.length) return res.status(400).json({ error: "Champs requis manquants", fields: missing });
 
   const newEmployee = {
     matricule: generateMatricule(),
-    nom,
-    prenom,
-    poste,
-    departement,
-    salaire: salaire ?? null,
-    // ✅ transformer la date en ISO
-    dateEmbauche: dateEmbauche ? new Date(dateEmbauche).toISOString() : null,
-    email,
+    nom: nom ?? "",
+    prenom: prenom ?? "",
+    poste: poste ?? "",
+    departement: departement ?? "",
+    salaire: salaire ? Number(salaire) : null, // ✅ nombre
+    date_embauche: date_embauche ? new Date(date_embauche).toISOString() : null, // ✅ ISO date
+    email: email ?? "",
     telephone: telephone ?? null
   };
 
@@ -91,9 +99,14 @@ app.put("/employees/:matricule", (req, res) => {
   const index = employees.findIndex(e => e.matricule === req.params.matricule);
   if (index === -1) return res.status(404).json({ error: "Employé non trouvé" });
 
-  // 🔹 Empêcher modification du matricule
-  const { matricule, ...updates } = req.body;
-  employees[index] = { ...employees[index], ...updates };
+  const { matricule, salaire, date_embauche, ...updates } = req.body;
+
+  employees[index] = {
+    ...employees[index],
+    ...updates,
+    salaire: salaire ? Number(salaire) : employees[index].salaire,
+    date_embauche: date_embauche ? new Date(date_embauche).toISOString() : employees[index].date_embauche
+  };
 
   if (!isServerless) {
     try {
