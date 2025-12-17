@@ -64,23 +64,15 @@ app.get("/employees/:matricule", (req, res) => {
 app.post("/employees", (req, res) => {
   const { nom, prenom, poste, departement, salaire, dateEmbauche, email, telephone } = req.body;
 
-  // Validation basique
-  const missing = [];
-  if (!nom) missing.push("nom");
-  if (!prenom) missing.push("prenom");
-  if (!poste) missing.push("poste");
-  if (!departement) missing.push("departement");
-  if (!email) missing.push("email");
-  if (missing.length) return res.status(400).json({ error: "Champs requis manquants", fields: missing });
-
   const newEmployee = {
-    matricule: generateMatricule(), // ✅ auto incrémenté
+    matricule: generateMatricule(),
     nom,
     prenom,
     poste,
     departement,
     salaire: salaire ?? null,
-    dateEmbauche: dateEmbauche ?? null,
+    // ✅ transformer la date en ISO
+    dateEmbauche: dateEmbauche ? new Date(dateEmbauche).toISOString() : null,
     email,
     telephone: telephone ?? null
   };
@@ -88,11 +80,7 @@ app.post("/employees", (req, res) => {
   employees.push(newEmployee);
 
   if (!isServerless) {
-    try {
-      fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
-    } catch (e) {
-      console.error("Erreur écriture fichier:", e);
-    }
+    fs.writeFileSync(employeesPath, JSON.stringify(employees, null, 2));
   }
 
   res.status(201).json(newEmployee);
